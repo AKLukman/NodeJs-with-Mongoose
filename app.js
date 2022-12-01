@@ -147,7 +147,7 @@ app.post("/api/v1/product", async (req, res, next) => {
 app.get("/api/v1/product", async (req, res, next) => {
   try {
     const products = await Product.where("name")
-      .equals("Tea")
+      .equals(/\w/)
       .where("quantity")
       .gte(10);
 
