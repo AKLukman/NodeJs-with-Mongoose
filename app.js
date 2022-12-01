@@ -146,9 +146,7 @@ app.post("/api/v1/product", async (req, res, next) => {
 
 app.get("/api/v1/product", async (req, res, next) => {
   try {
-    const products = await Product.find({
-      $or: [{ _id: "638798626e5cc210ec6d02c5" }, { name: "dhhd" }],
-    });
+    const products = await Product.find({ status: { $ne: "Out-of-stock" } });
     res.status(200).json({
       status: "Success",
       message: "Successfully got the data",
