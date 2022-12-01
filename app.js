@@ -146,7 +146,7 @@ app.post("/api/v1/product", async (req, res, next) => {
 
 app.get("/api/v1/product", async (req, res, next) => {
   try {
-    const products = await Product.find({});
+    const products = await Product.find({ _id: "638798626e5cc210ec6d02c5" });
     res.status(200).json({
       status: "Success",
       message: "Successfully got the data",
