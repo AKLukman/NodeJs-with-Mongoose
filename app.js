@@ -146,10 +146,12 @@ app.post("/api/v1/product", async (req, res, next) => {
 
 app.get("/api/v1/product", async (req, res, next) => {
   try {
-    const products = await Product.where("name")
-      .equals(/\w/)
-      .where("quantity")
-      .gte(10);
+    // const products = await Product.where("name")
+    //   .equals(/\w/)
+    //   .where("quantity")
+    //   .gte(10);
+
+    const products = await Product.findById("63879e3b201e3d1df8e81181");
 
     res.status(200).json({
       status: "Success",
