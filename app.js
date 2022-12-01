@@ -146,10 +146,14 @@ app.post("/api/v1/product", async (req, res, next) => {
 
 app.get("/api/v1/product", async (req, res, next) => {
   try {
-    const products = await Product.find({ status: { $ne: "Out-of-stock" } });
+    const products = await Product.where("name")
+      .equals("Tea")
+      .where("quantity")
+      .gte(10);
+
     res.status(200).json({
       status: "Success",
-      message: "Successfully got the data",
+      message: "Got the data Successfully",
       data: products,
     });
   } catch (error) {
