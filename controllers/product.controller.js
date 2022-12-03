@@ -15,7 +15,17 @@ module.exports.getProducts = async (req, res, next) => {
     //   .where("quantity")
     //   .gte(10);
 
-    const products = await getProductService(req.query);
+    const queryObject = { ...req.query };
+
+    // short , page , limit ->exclude
+    const excludesField = ["sort", "page", "limit"];
+
+    // console.log("Original object", req.query);
+    // console.log("Query object", queryObject);
+
+    excludesField.forEach((field) => delete queryObject[field]);
+
+    const products = await getProductService(queryObject);
 
     res.status(200).json({
       status: "Success",
