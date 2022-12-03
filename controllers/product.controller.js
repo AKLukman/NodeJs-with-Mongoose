@@ -1,3 +1,4 @@
+const { query } = require("express");
 const Product = require("../models/Product");
 const {
   getProductService,
@@ -15,7 +16,7 @@ module.exports.getProducts = async (req, res, next) => {
     //   .where("quantity")
     //   .gte(10);
 
-    const queryObject = { ...req.query };
+    const filters = { ...req.query };
 
     // short , page , limit ->exclude
     const excludesField = ["sort", "page", "limit"];
@@ -23,9 +24,21 @@ module.exports.getProducts = async (req, res, next) => {
     // console.log("Original object", req.query);
     // console.log("Query object", queryObject);
 
-    excludesField.forEach((field) => delete queryObject[field]);
+    excludesField.forEach((field) => delete filters[field]);
 
-    const products = await getProductService(queryObject);
+    const queries = {};
+    if (req.query.sort) {
+      //price,quantity => 'price,quantity'
+      const sortBy = req.query.sort.split(",").join(" ");
+      queries.sortBy = sortBy;
+    }
+
+    if (req.query.fields) {
+      const fields = req.query.fields.split(",").join(" ");
+      queries.fields = fields;
+    }
+
+    const products = await getProductService(filters, queries);
 
     res.status(200).json({
       status: "Success",

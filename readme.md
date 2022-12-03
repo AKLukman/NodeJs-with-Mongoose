@@ -25,3 +25,8 @@
 }
 ]
 }
+
+<!-- Advanced filtering -->
+<!-- - dia dile oita bad dia baki sob dekhabe -->
+
+http://localhost:5000/api/v1/product?sort=-price,quantity&fields=name,price,-\_id
