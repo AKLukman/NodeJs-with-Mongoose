@@ -4,6 +4,8 @@ const {
   createProductService,
   updateProductService,
   bulkUpdateProductService,
+  deleteProductByIdService,
+  bulkDeleteProductService,
 } = require("../services/product.service");
 
 module.exports.getProducts = async (req, res, next) => {
@@ -13,7 +15,7 @@ module.exports.getProducts = async (req, res, next) => {
     //   .where("quantity")
     //   .gte(10);
 
-    const products = await getProductService();
+    const products = await getProductService(req.query);
 
     res.status(200).json({
       status: "Success",
@@ -54,7 +56,7 @@ module.exports.createProduct = async (req, res, next) => {
   }
 };
 
-exports.porductUpdate = async (req, res, next) => {
+exports.updatePorductById = async (req, res, next) => {
   try {
     const { id } = req.params;
     const result = await updateProductService(id, req.body);
@@ -73,7 +75,7 @@ exports.porductUpdate = async (req, res, next) => {
   }
 };
 
-exports.bulkUpdateProduct = async (req, res, next) => {
+exports.bulkUpdateProductById = async (req, res, next) => {
   try {
     const result = await bulkUpdateProductService(req.body);
     res.status(200).json({
@@ -85,6 +87,51 @@ exports.bulkUpdateProduct = async (req, res, next) => {
     res.status(400).json({
       status: "Failed",
       message: "Coudldn't update the product",
+      error: error.message,
+    });
+  }
+};
+
+exports.deleteProductById = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+
+    const result = await deleteProductByIdService(id);
+
+    // if (!result.deletedCount) {
+    //   res.status(400).json({
+    //     status: "Failed",
+    //     error: "Couldn't delete the product",
+    //   });
+    // }
+
+    res.status(200).json({
+      status: "success",
+      message: "delete successfully",
+      data: result,
+    });
+  } catch (error) {
+    res.status(400).json({
+      status: "Failed",
+      message: "Failed to delete data",
+      error: error.message,
+    });
+  }
+};
+
+exports.bulkDeleteProduct = async (req, res, next) => {
+  try {
+    const result = await bulkDeleteProductService(req.body.ids);
+
+    res.status(200).json({
+      status: "success",
+      message: "Succssfully deleted the given products",
+      data: result,
+    });
+  } catch (error) {
+    res.status(400).json({
+      status: "Failed",
+      message: "Couldn't deleted the given product",
       error: error.message,
     });
   }
