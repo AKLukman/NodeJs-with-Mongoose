@@ -16,7 +16,16 @@ module.exports.getProducts = async (req, res, next) => {
     //   .where("quantity")
     //   .gte(10);
 
-    const filters = { ...req.query };
+    let filters = { ...req.query };
+
+    // mongodb operators
+    // gt/gte/lt/lte/nte
+    let filterString = JSON.stringify(filters);
+    filterString = filterString.replace(
+      /\b(gt|gte|lt|lte|ne)\b/g,
+      (match) => `$${match}`
+    );
+    filters = JSON.parse(filterString);
 
     // short , page , limit ->exclude
     const excludesField = ["sort", "page", "limit"];
