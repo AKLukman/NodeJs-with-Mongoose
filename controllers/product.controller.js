@@ -17,6 +17,7 @@ module.exports.getProducts = async (req, res, next) => {
     //   .gte(10);
 
     let filters = { ...req.query };
+    // let filters = {req.query};
 
     // mongodb operators
     // gt/gte/lt/lte/nte
@@ -45,6 +46,23 @@ module.exports.getProducts = async (req, res, next) => {
     if (req.query.fields) {
       const fields = req.query.fields.split(",").join(" ");
       queries.fields = fields;
+    }
+
+    // pagination
+    if (req.query.page) {
+      const { page = 1, limit = 2 } = req.query;
+
+      // Product 50
+      // Each page 10
+      //page 1 ->1-10
+      //page 2 ->11-20
+      //page 3 ->21-30   -> page  3 -> skip -> 1-20 -> 3-1 -> 2*10
+      //page 4 ->31-40   -> page 4 -> skip -> 1-30 -> 4-1 -> 2*10
+      //page 5 ->41-50
+
+      const skip = (page - 1) * parseInt(limit);
+      queries.skip = skip;
+      queries.limit = Number(limit);
     }
 
     const products = await getProductService(filters, queries);
